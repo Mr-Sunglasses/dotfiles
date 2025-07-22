@@ -1,1 +1,0 @@
-/Users/kanishkpachauri/.config/zsh/plugins.zsh

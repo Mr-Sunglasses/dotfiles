@@ -1,0 +1,35 @@
+# Pustota theme for Ghostty
+# Minimalist ghostty theme inspired by the original [pustota VSCode theme](https://github.com/sobolevn/pustota)
+# Designed to keep you focused on working in the terminal without visual distractions.
+
+# Standard ANSI colors (0-7)
+palette = 0=#181A1D
+palette = 1=#FF8F40
+palette = 2=#C2D94C
+palette = 3=#E6B450
+palette = 4=#59C2FF
+palette = 5=#FFB454
+palette = 6=#626A73
+palette = 7=#B3B1AD
+
+# Bright ANSI colors (8-15)
+palette = 8=#626A73
+palette = 9=#FF8F40
+palette = 10=#C2D94C
+palette = 11=#E6B450
+palette = 12=#59C2FF
+palette = 13=#FFB454
+palette = 14=#B9B9B9
+palette = 15=#F5F5F5
+
+# Terminal colors
+background = #0A0E14
+foreground = #B3B1AD
+
+# Cursor
+cursor-color = #B9B9B9
+cursor-text = #0A0E14
+
+# Selection
+selection-background = #1C2631
+selection-foreground = #B3B1AD
