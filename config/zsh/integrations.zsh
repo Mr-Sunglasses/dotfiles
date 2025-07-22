@@ -1,0 +1,1 @@
+/Users/kanishkpachauri/.config/zsh/integrations.zsh
