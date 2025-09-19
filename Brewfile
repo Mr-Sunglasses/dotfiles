@@ -6,28 +6,42 @@ brew "bat"
 brew "btop"
 # Vector graphics library with cross-device output support
 brew "cairo"
+# Cross-platform make
+brew "cmake"
 # GNU File, Shell, and Text utilities
 brew "coreutils"
 # Apjanke's fork of the classic cowsay project
 brew "cowsay"
 # Modern, maintained replacement for ls
 brew "eza"
+# Simple, fast and user-friendly alternative to find
+brew "fd"
 # Play, record, convert, and stream audio and video
 brew "ffmpeg"
 # Infamous electronic fortune-cookie generator
 brew "fortune"
 # Command-line fuzzy finder written in Go
 brew "fzf"
+# GitHub command-line tool
+brew "gh"
 # Syntax-highlighting pager for git and diff output
 brew "git-delta"
 # GNU Pretty Good Privacy (PGP) package
 brew "gnupg"
 # Open source programming language to build simple/reliable/efficient software
 brew "go"
+# Tool for glamorous shell scripts
+brew "gum"
 # Improved top (interactive process viewer)
 brew "htop"
+# Simple terminal UI for git commands
+brew "lazygit"
 # Linux virtual machines
 brew "lima"
+# Next-gen compiler infrastructure
+brew "llvm"
+# LLVM Project Linker
+brew "lld"
 # Rainbows and unicorns in your console!
 brew "lolcat"
 # Ambitious Vim-fork focused on extensibility and agility
@@ -38,14 +52,24 @@ brew "netcat"
 brew "pkgconf"
 # Generic machine emulator and virtualizer
 brew "qemu"
+# Search tool like grep and The Silver Searcher
+brew "ripgrep"
 # Powerful, clean, object-oriented scripting language
 brew "ruby"
 # User interface to the TELNET protocol
 brew "telnet"
+# Display directories as trees (with optional color/HTML output)
+brew "tree"
+# Internet file retriever
+brew "wget"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
-# A simple terminal UI for git commands, written in Go
-brew "jesseduffield/lazygit/lazygit"
+# Allows connection to a computer remotely
+cask "anydesk"
+# Open source IDE for exploring and testing APIs
+cask "bruno"
+# Web browser
+cask "firefox"
 # Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
 # Clipboard manager
@@ -54,12 +78,20 @@ cask "maccy"
 cask "mactex"
 # Intercept, modify, replay, save HTTP/S traffic
 cask "mitmproxy"
+# Open-source software for live streaming and screen recording
+cask "obs"
+# Collaboration platform for API development
+cask "postman"
+# Python IDE for beginners
+cask "thonny"
 # Utility to hide the notch
 cask "topnotch"
 # Turn your MacBook's trackpad into a precise digital weighing scale
 cask "trackweight"
 # Multimedia player
 cask "vlc"
+# Video communication and virtual meeting platform
+cask "zoom"
 vscode "aaron-bond.better-comments"
 vscode "alexcvzz.vscode-sqlite"
 vscode "astro-build.astro-vscode"
@@ -68,7 +100,6 @@ vscode "charliermarsh.ruff"
 vscode "cschlosser.doxdocgen"
 vscode "cweijan.dbclient-jdbc"
 vscode "cweijan.vscode-mysql-client2"
-vscode "davidanson.vscode-markdownlint"
 vscode "dbaeumer.vscode-eslint"
 vscode "docker.docker"
 vscode "eamodio.gitlens"
