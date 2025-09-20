@@ -23,6 +23,46 @@ echo "Downloading and installing Atuin..."
 curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh
 echo "Atuin installation complete."
 
+# Install rust via rustup
+if ! command -v rustc >/dev/null 2>&1; then
+    echo "Rust not found. Installing Rust..."
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+    echo "Rust installation complete."
+else
+    echo "Rust is already installed."
+fi
+
+# Install uv
+if ! command -v uv >/dev/null 2>&1; then
+    echo "uv not found. Installing uv..."
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    echo "uv installation complete."
+else
+    echo "uv is already installed."
+fi
+
+# Install node via nvm
+if [ ! -d "$HOME/.nvm" ]; then
+    echo "nvm not found. Installing nvm..."
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+    echo "nvm installation complete."
+    echo "Installing latest Node.js via nvm..."
+    
+    \. "$HOME/.nvm/nvm.sh"
+
+    # Download and install Node.js:
+    nvm install 22
+
+    # Verify the Node.js version:
+    node -v # Should print "v22.19.0".
+
+    # Verify npm version:
+    npm -v # Should print "10.9.3".
+    echo "Node.js installation complete."
+else
+    echo "nvm is already installed."
+fi 
+
 # copy all shell files in config/shell to home directory
 mkdir -p ~/.config/zsh
 echo "Copying shell configuration files to ~/.config/zsh/..."
