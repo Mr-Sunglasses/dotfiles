@@ -27,7 +27,7 @@ alias ls='gls --color -h --group-directories-first -F'
 alias cat='bat --paging never --decorations never --plain'
 
 # Utilities
-alias afk='/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend'
+alias afk='pmset displaysleepnow'
 alias pubkey="cat ~/.ssh/id_rsa.pub | pbcopy | echo '=> Public key copied to pasteboard.'"
 alias shrug="echo '¯\_(ツ)_/¯' | pbcopy | echo '=> Copied to pasteboard.'"
 alias crontabguru="open -a 'Google Chrome' 'https://crontab.guru/'"
