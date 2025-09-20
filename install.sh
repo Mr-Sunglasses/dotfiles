@@ -18,6 +18,11 @@ fi
 echo "Copying zsh configuration files to home directory..."
 cp ./config/zshrc ~/.zshrc
 
+# Download atuin.sh
+echo "Downloading and installing Atuin..."
+curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh
+echo "Atuin installation complete."
+
 # copy all shell files in config/shell to home directory
 mkdir -p ~/.config/zsh
 echo "Copying shell configuration files to ~/.config/zsh/..."
