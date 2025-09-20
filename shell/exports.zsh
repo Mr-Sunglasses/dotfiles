@@ -4,9 +4,6 @@
 # export ZSH="$HOME/.oh-my-zsh"
 # ZSH_THEME="robbyrussell"
 
-# Directory to store zinit plugins
-ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
-
 # Path configurations
 #export PATH="$PATH:/Users/kanishkpachauri/Library/Python/3.9/bin"
 export PATH="$PATH:/Users/kanishkpachauri/.local/bin"
