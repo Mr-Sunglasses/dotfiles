@@ -23,7 +23,7 @@ alias gp="git push"
 # alias syncimage="python3 /Users/kanishkpachauri/Documents/kanishkblog/scripts/images.py"
 
 # File operations
-alias ls='gls --color -h --group-directories-first -F'
+alias ls="eza --color=always --long --git --no-filesize --icons=always --no-time --no-user"
 alias cat='bat --paging never --decorations never --plain'
 
 # Utilities
