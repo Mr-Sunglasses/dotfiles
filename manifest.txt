@@ -1,0 +1,35 @@
+# Files tracked by this repo: <repo path> <path on this Mac>
+# Used by install.sh (repo -> Mac) and sync.sh (Mac -> repo).
+# A trailing slash means a directory, mirrored as a whole.
+
+# Shell
+config/zshrc                    ~/.zshrc
+config/bashrc                   ~/.bashrc
+config/p10k.zsh                 ~/.p10k.zsh
+shell/                          ~/.config/zsh/
+
+# Git & GPG
+config/gitconfig                ~/.gitconfig
+config/gnupg/gpg-agent.conf     ~/.gnupg/gpg-agent.conf
+config/git/ignore               ~/.config/git/ignore
+config/gh/config.yml            ~/.config/gh/config.yml
+
+# Terminals
+config/ghostty/config           ~/.config/ghostty/config
+config/ghostty/themes/          ~/.config/ghostty/themes/
+config/kitty/kitty.conf         ~/.config/kitty/kitty.conf
+config/kitty/current-theme.conf ~/.config/kitty/current-theme.conf
+
+# Editors
+config/zed/keymap.json          ~/.config/zed/keymap.json
+config/zed/settings.json        ~/.config/zed/settings.json
+config/zed/snippets/            ~/.config/zed/snippets/
+config/zed/themes/              ~/.config/zed/themes/
+config/gram/settings.jsonc      ~/.config/gram/settings.jsonc
+config/gram/themes/             ~/.config/gram/themes/
+
+# Tools
+config/atuin/config.toml        ~/.config/atuin/config.toml
+config/btop/btop.conf           ~/.config/btop/btop.conf
+config/htop/htoprc              ~/.config/htop/htoprc
+config/karabiner/karabiner.json ~/.config/karabiner/karabiner.json

@@ -109,29 +109,18 @@ install_tools() {
 install_configs() {
     echo "Copying config files..."
 
-    # Shell
-    install_config config/zshrc     ~/.zshrc
-    install_config config/bashrc    ~/.bashrc
-    install_config config/p10k.zsh  ~/.p10k.zsh
-    for file in ./shell/*.zsh; do
-        install_config "shell/${file:t}" ~/.config/zsh/"${file:t}"
-    done
-
-    # Git & GPG
-    install_config config/gitconfig ~/.gitconfig
     mkdir -p ~/.gnupg && chmod 700 ~/.gnupg
-    install_config config/gnupg/gpg-agent.conf ~/.gnupg/gpg-agent.conf
+
+    local repo_path home_path
+    while read -r repo_path home_path; do
+        install_config "${repo_path%/}" "${${home_path/#\~/$HOME}%/}"
+    done < <(grep -vE '^\s*(#|$)' manifest.txt)
 
     # SSH: only seed a config if there isn't one; never overwrite host entries
     if [ ! -e ~/.ssh/config ]; then
         mkdir -p ~/.ssh && chmod 700 ~/.ssh
         install_config config/ssh_config ~/.ssh/config
     fi
-
-    # Apps in ~/.config
-    for app in atuin btop gh ghostty git gram htop karabiner kitty zed; do
-        install_config "config/$app" ~/.config/"$app"
-    done
 }
 
 $CONFIGS_ONLY || install_tools
