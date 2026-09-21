@@ -34,16 +34,15 @@ To track a new file, add a line to `manifest.txt` (`<repo path> <path on this Ma
 - **GitHub CLI**: `gh auth login`
 - **Atuin history**: `atuin login`
 - **Karabiner-Elements**: grant its permissions in System Settings → Privacy & Security.
-- **Raycast**: see below.
+- **Tinycast snippets**: see below.
 
-# Raycast
-Raycast settings live in its own encrypted database, not in plain files, so they are not stored in this repo.
+# Tinycast
+Tinycast's settings (hotkeys, app bindings, toggles) live in macOS preferences and its quicklinks in a SQLite
+database, so `sync.sh` exports them to text files in `config/tinycast/` and `install.sh` imports them back
+(see `require/tinycast.sh`). Tinycast is quit during the import and reopened afterwards.
 
-- **Cloud Sync (Raycast Pro)**: sign in on the new Mac and everything syncs.
-- **Without Pro**: on the old Mac run `Export Settings & Data` in Raycast, set a passphrase, and save the `.rayconfig` file.
-  On the new Mac, open Raycast and run `Import Settings & Data` (or double-click the file) and pick the categories to import.
-- **Keep a backup automatically**: in Raycast Settings → Advanced, point the scheduled backup location at iCloud Drive
-  (or Dropbox), so there is always a recent encrypted `.rayconfig` to import.
+Snippets are **not** synced because they contain personal data and this repo is public. Copy
+`~/Library/Application Support/com.tinycast.app/Snippets` to the new Mac manually.
 
 # Note
 Feel free to modify the configurations as per your requirements. If you encounter any issues, please open an issue on the GitHub repository.

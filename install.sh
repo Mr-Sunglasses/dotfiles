@@ -48,7 +48,7 @@ install_tools() {
     brew bundle --file=./Brewfile || FAILED+=("brew bundle (re-run: brew bundle --file=$DOTFILES/Brewfile)")
 
     # Apps installed from their own sites on the current machine, not tracked by `brew bundle dump`
-    local -A apps=(kitty kitty zed Zed karabiner-elements Karabiner-Elements raycast Raycast)
+    local -A apps=(kitty kitty zed Zed karabiner-elements Karabiner-Elements tinycast Tinycast)
     for cask app in ${(kv)apps}; do
         if [ -d "/Applications/$app.app" ]; then
             echo "$app is already installed."
@@ -116,6 +116,9 @@ install_configs() {
         install_config "${repo_path%/}" "${${home_path/#\~/$HOME}%/}"
     done < <(grep -vE '^\s*(#|$)' manifest.txt)
 
+    # App settings that aren't plain files
+    source ./require/tinycast.sh && tinycast_import "$DOTFILES" "$BACKUP_DIR"
+
     # SSH: only seed a config if there isn't one; never overwrite host entries
     if [ ! -e ~/.ssh/config ]; then
         mkdir -p ~/.ssh && chmod 700 ~/.ssh
@@ -144,7 +147,7 @@ Manual steps left:
   - Log in to GitHub CLI:          gh auth login
   - Copy or create SSH keys in ~/.ssh
   - Atuin history sync:            atuin login
-  - Raycast: Settings → Advanced → Import (see README)
+  - Tinycast snippets: copy ~/Library/Application Support/com.tinycast.app/Snippets from the old Mac
   - Grant Karabiner-Elements its permissions in System Settings → Privacy & Security
 Then restart your terminal.
 EOF

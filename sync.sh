@@ -61,6 +61,10 @@ while read -r repo_path home_path; do
         cp "$home_path" "$repo_path"
     fi
 done < <(grep -vE '^\s*(#|$)' manifest.txt)
+
+# App settings that aren't plain files
+source ./require/tinycast.sh && tinycast_export "$DOTFILES"
+
 (( ${#missing} )) && { echo "Not found on this Mac (skipped):"; printf '  %s\n' "${missing[@]}" }
 
 if command -v brew >/dev/null 2>&1; then
