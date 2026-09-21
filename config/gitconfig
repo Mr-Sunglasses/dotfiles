@@ -1,0 +1,33 @@
+[user]
+	name = Kanishk Pachauri
+	email = itskanishkp.py@gmail.com
+	signingkey = FFDA5B7AFB33DBDBD0AAE2D913F690CEAFB47C58
+[core]
+	editor = nvim
+  autocrlf = input
+[commit]
+	gpgsign = true
+[init]
+	defaultBranch = main
+[gpg]
+	program = gpg
+[delta]
+	navigate = true
+	side-by-side = true
+	light = false
+	line-numbers = true
+
+
+    # delta detects terminal colors automatically; set one of these to disable auto-detection
+    # dark = true
+    # light = true
+
+[merge]
+	conflictstyle = diff3
+
+[diff]
+	colorMoved = default
+
+[alias]
+    pr = !sh -c \"git fetch upstream pull/${1}/head:pr/${1} && git checkout pr/${1}\"
+

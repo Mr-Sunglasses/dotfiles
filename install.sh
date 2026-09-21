@@ -1,97 +1,161 @@
 #!/bin/zsh
+#
+# Set up a new Mac with these dotfiles.
+#
+#   ./install.sh                 install everything (tools + configs)
+#   ./install.sh --configs-only  only copy config files (no installs)
+#
+# Existing files that would be overwritten are backed up to
+# ~/.dotfiles-backup/<timestamp>/ first.
 
-# Source all zsh configuration files in order
-source ./require/install_brew.sh
+DOTFILES="${0:A:h}"
+cd "$DOTFILES" || exit 1
 
-# Install nerd fonts
-source ./require/install_nerd_fonts.sh
+CONFIGS_ONLY=false
+[[ "$1" == "--configs-only" ]] && CONFIGS_ONLY=true
 
-# Install homebrew packages with Brewfile
-if [ -f ./Brewfile ]; then
+BACKUP_DIR="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
+FAILED=()
+
+# Copy a file or directory from the repo to $HOME, backing up whatever was there.
+# usage: install_config <repo path> <destination>
+install_config() {
+    local src="$DOTFILES/$1" dest="$2"
+    if [ ! -e "$src" ]; then
+        echo "  ! missing in repo: $1"
+        FAILED+=("$1")
+        return
+    fi
+    if [ -e "$dest" ] && ! diff -rq "$src" "$dest" >/dev/null 2>&1; then
+        mkdir -p "$BACKUP_DIR/$(dirname "${dest#$HOME/}")"
+        cp -R "$dest" "$BACKUP_DIR/${dest#$HOME/}"
+    fi
+    mkdir -p "$(dirname "$dest")"
+    if [ -d "$src" ]; then
+        mkdir -p "$dest"
+        cp -R "$src/." "$dest/"
+    else
+        cp "$src" "$dest"
+    fi
+    echo "  ✓ $dest"
+}
+
+install_tools() {
+    # Homebrew, then everything in the Brewfile
+    source ./require/install_brew.sh
+
     echo "Installing packages from Brewfile..."
-    brew bundle --file=./Brewfile
+    brew bundle --file=./Brewfile || FAILED+=("brew bundle (re-run: brew bundle --file=$DOTFILES/Brewfile)")
+
+    # Apps installed from their own sites on the current machine, not tracked by `brew bundle dump`
+    local -A apps=(kitty kitty zed Zed karabiner-elements Karabiner-Elements raycast Raycast)
+    for cask app in ${(kv)apps}; do
+        if [ -d "/Applications/$app.app" ]; then
+            echo "$app is already installed."
+        else
+            brew install --cask "$cask" || FAILED+=("cask $cask")
+        fi
+    done
+
+    source ./require/install_nerd_fonts.sh || FAILED+=("nerd fonts")
+
+    # The installers below would edit ~/.zshrc / ~/.bashrc; tell them not to,
+    # since our configs already load them.
+
+    if ! command -v atuin >/dev/null 2>&1 && [ ! -x "$HOME/.atuin/bin/atuin" ]; then
+        echo "Installing Atuin..."
+        curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh || FAILED+=("atuin")
+    else
+        echo "Atuin is already installed."
+    fi
+
+    if ! command -v rustup >/dev/null 2>&1 && [ ! -x "$HOME/.cargo/bin/rustup" ]; then
+        echo "Installing Rust..."
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path || FAILED+=("rust")
+    else
+        echo "Rust is already installed."
+    fi
+
+    if ! command -v uv >/dev/null 2>&1 && [ ! -x "$HOME/.local/bin/uv" ]; then
+        echo "Installing uv..."
+        curl -LsSf https://astral.sh/uv/install.sh | env UV_NO_MODIFY_PATH=1 sh || FAILED+=("uv")
+    else
+        echo "uv is already installed."
+    fi
+
+    if [ ! -d "$HOME/.nvm" ]; then
+        echo "Installing nvm and Node.js 22..."
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | PROFILE=/dev/null bash || FAILED+=("nvm")
+        export NVM_DIR="$HOME/.nvm"
+        if [ -s "$NVM_DIR/nvm.sh" ]; then
+            \. "$NVM_DIR/nvm.sh"
+            nvm install 22 && nvm alias default 22 || FAILED+=("node 22")
+        fi
+    else
+        echo "nvm is already installed."
+    fi
+
+    # Neovim config lives in its own repo
+    if [ -d "$HOME/.config/nvim/.git" ]; then
+        echo "Updating Neovim config..."
+        git -C "$HOME/.config/nvim" pull --ff-only || FAILED+=("nvim config pull")
+    else
+        [ -e "$HOME/.config/nvim" ] && mkdir -p "$BACKUP_DIR/.config" && mv "$HOME/.config/nvim" "$BACKUP_DIR/.config/nvim"
+        echo "Cloning Neovim config..."
+        git clone https://github.com/Mr-Sunglasses/vimconfig.git "$HOME/.config/nvim" || FAILED+=("nvim config clone")
+    fi
+}
+
+install_configs() {
+    echo "Copying config files..."
+
+    # Shell
+    install_config config/zshrc     ~/.zshrc
+    install_config config/bashrc    ~/.bashrc
+    install_config config/p10k.zsh  ~/.p10k.zsh
+    for file in ./shell/*.zsh; do
+        install_config "shell/${file:t}" ~/.config/zsh/"${file:t}"
+    done
+
+    # Git & GPG
+    install_config config/gitconfig ~/.gitconfig
+    mkdir -p ~/.gnupg && chmod 700 ~/.gnupg
+    install_config config/gnupg/gpg-agent.conf ~/.gnupg/gpg-agent.conf
+
+    # SSH: only seed a config if there isn't one; never overwrite host entries
+    if [ ! -e ~/.ssh/config ]; then
+        mkdir -p ~/.ssh && chmod 700 ~/.ssh
+        install_config config/ssh_config ~/.ssh/config
+    fi
+
+    # Apps in ~/.config
+    for app in atuin btop gh ghostty git gram htop karabiner kitty zed; do
+        install_config "config/$app" ~/.config/"$app"
+    done
+}
+
+$CONFIGS_ONLY || install_tools
+install_configs   # last, so no installer can overwrite our configs
+
+# Pick up the new gpg-agent.conf (pinentry-mac)
+command -v gpgconf >/dev/null 2>&1 && gpgconf --kill gpg-agent
+
+echo
+[ -d "$BACKUP_DIR" ] && echo "Previous versions of overwritten files: $BACKUP_DIR"
+if (( ${#FAILED} )); then
+    echo "Finished with problems in:"
+    printf '  - %s\n' "${FAILED[@]}"
 else
-    echo "No Brewfile found. Skipping package installation."
-fi 
-
-# Copy zsh configuration files to home directory
-echo "Copying zsh configuration files to home directory..."
-cp ./config/zshrc ~/.zshrc
-
-# Download atuin.sh
-echo "Downloading and installing Atuin..."
-curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh
-echo "Atuin installation complete."
-
-# Install rust via rustup
-if ! command -v rustc >/dev/null 2>&1; then
-    echo "Rust not found. Installing Rust..."
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-    echo "Rust installation complete."
-else
-    echo "Rust is already installed."
+    echo "Installation and configuration complete."
 fi
+cat <<'EOF'
 
-# Install uv
-if ! command -v uv >/dev/null 2>&1; then
-    echo "uv not found. Installing uv..."
-    curl -LsSf https://astral.sh/uv/install.sh | sh
-    echo "uv installation complete."
-else
-    echo "uv is already installed."
-fi
-
-# Install node via nvm
-if [ ! -d "$HOME/.nvm" ]; then
-    echo "nvm not found. Installing nvm..."
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-    echo "nvm installation complete."
-    echo "Installing latest Node.js via nvm..."
-    
-    \. "$HOME/.nvm/nvm.sh"
-
-    # Download and install Node.js:
-    nvm install 22
-
-    # Verify the Node.js version:
-    node -v # Should print "v22.19.0".
-
-    # Verify npm version:
-    npm -v # Should print "10.9.3".
-    echo "Node.js installation complete."
-else
-    echo "nvm is already installed."
-fi 
-
-# copy all shell files in config/shell to home directory
-mkdir -p ~/.config/zsh
-echo "Copying shell configuration files to ~/.config/zsh/..."
-for file in ./shell/*; do
-    cp "$file" ~/.config/zsh/
-done
-echo "Shell configuration files copied."
-
-# copy ghostty config
-mkdir -p ~/.config/ghostty
-echo "Copying ghostty configuration file to ~/.config/ghostty/..."
-cp ./config/ghostty/* ~/.config/ghostty/
-echo "Ghostty configuration file copied."
-
-# copy bashrc
-cp ./config/bashrc ~/.bashrc
-
-# copy remaining app configs into ~/.config
-echo "Copying app configuration files to ~/.config/..."
-for app in atuin btop gh git gram htop karabiner kitty zed; do
-    mkdir -p ~/.config/$app
-    cp -R ./config/$app/. ~/.config/$app/
-done
-echo "App configuration files copied."
-
-# Configure neovim
-echo "Configuring Neovim..."
-mkdir -p ~/.config/nvim
-git clone --depth 1 https://github.com/Mr-Sunglasses/vimconfig.git ~/.config/nvim
-echo "Neovim configuration complete."
-
-echo "Installation and configuration complete. Please restart your terminal."
+Manual steps left:
+  - Import your GPG signing key:   gpg --import private-key.asc
+  - Log in to GitHub CLI:          gh auth login
+  - Copy or create SSH keys in ~/.ssh
+  - Atuin history sync:            atuin login
+  - Raycast: Settings → Advanced → Import (see README)
+  - Grant Karabiner-Elements its permissions in System Settings → Privacy & Security
+Then restart your terminal.
+EOF
