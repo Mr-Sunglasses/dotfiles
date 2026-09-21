@@ -13,9 +13,20 @@ the Neovim config, and then copies every config in this repo into place. Any fil
 
 Use `./install.sh --configs-only` to only copy the config files.
 
-# Updating the repo from this Mac
-- Configs: copy the changed file back into `config/` or `shell/` and commit.
-- Homebrew: `brew bundle dump --force --file=Brewfile`
+# Syncing this Mac back to the repo
+Run `dotsync` (or `./sync.sh`) whenever you've changed a config or installed something with Homebrew. It:
+
+1. pulls the latest from GitHub
+2. copies every file listed in `manifest.txt` from this Mac into the repo, and regenerates the `Brewfile`
+3. shows what changed, including added/removed Homebrew packages
+4. refuses to commit if the changes contain something that looks like a secret (API keys, tokens, private keys),
+   and warns about hardcoded `/Users/...` paths
+5. asks before committing and pushing (`d` shows the full diff)
+
+Options: `--dry-run` to only preview, `-y` to skip the question, `-m "message"` for a custom commit message.
+
+To track a new file, add a line to `manifest.txt` (`<repo path> <path on this Mac>`, trailing `/` for a directory).
+`install.sh` reads the same list, so it will install it on the next Mac too.
 
 # Things the script can't do
 - **GPG signing key**: `gpg --export-secret-keys --armor <key id> > key.asc` on the old Mac, `gpg --import key.asc` on the new one.
