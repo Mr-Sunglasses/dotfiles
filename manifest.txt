@@ -25,8 +25,6 @@ config/zed/keymap.json          ~/.config/zed/keymap.json
 config/zed/settings.json        ~/.config/zed/settings.json
 config/zed/snippets/            ~/.config/zed/snippets/
 config/zed/themes/              ~/.config/zed/themes/
-config/gram/settings.jsonc      ~/.config/gram/settings.jsonc
-config/gram/themes/             ~/.config/gram/themes/
 
 # Tools
 config/atuin/config.toml        ~/.config/atuin/config.toml
