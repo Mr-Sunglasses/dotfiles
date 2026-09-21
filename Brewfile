@@ -156,10 +156,6 @@ cask "codexbar"
 cask "firefox"
 # Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
-# Code editor focused on stability, without AI, subscriptions, or telemetry
-cask "gram"
-# Clipboard manager
-cask "maccy"
 # Intercept, modify, replay, save HTTP/S traffic
 cask "mitmproxy"
 # VPN client
@@ -176,8 +172,6 @@ cask "rar"
 cask "thonny"
 # Tiny, fully native launcher, hotkeys, and clipboard history
 cask "abue-ammar/tinycast/tinycast"
-# Utility to hide the notch
-cask "topnotch"
 # Multimedia player
 cask "vlc"
 # Video communication and virtual meeting platform
