@@ -124,6 +124,7 @@ install_configs() {
         mkdir -p ~/.ssh && chmod 700 ~/.ssh
         install_config config/ssh_config ~/.ssh/config
     fi
+    source ./require/fix_ssh_permissions.sh >/dev/null
 }
 
 $CONFIGS_ONLY || install_tools
@@ -145,7 +146,7 @@ cat <<'EOF'
 Manual steps left:
   - Import your GPG signing key:   gpg --import private-key.asc
   - Log in to GitHub CLI:          gh auth login
-  - Copy or create SSH keys in ~/.ssh
+  - Copy ~/.ssh from the old Mac, then run: ./require/fix_ssh_permissions.sh
   - Atuin history sync:            atuin login
   - Tinycast snippets: copy ~/Library/Application Support/com.tinycast.app/Snippets from the old Mac
   - Grant Karabiner-Elements its permissions in System Settings → Privacy & Security
