@@ -37,3 +37,10 @@ paste() {
   curl -X POST -F "file=@${file}" https://paste.fosscu.org/file
   echo '\n'
 }
+
+# Disable leaked xterm mouse-tracking escape codes (happens when vim/tmux/less
+# crash or get killed without turning mouse reporting back off).
+fixmouse() {
+  printf '\e[?1000l\e[?1001l\e[?1002l\e[?1003l\e[?1006l\e[?1015l'
+}
+precmd_functions+=(fixmouse)

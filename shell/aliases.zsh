@@ -1,8 +1,14 @@
 # Aliases Configuration
 
+# claude
+alias claude-k="claude_config_dir=~/.claude-kanishk claude"
+
 # System
 alias os-release="sw_vers"
 alias c="clear"
+
+# Tools
+alias lg="lazygit"
 
 # Editor
 alias vim="nvim"
@@ -23,8 +29,8 @@ alias gp="git push"
 # alias syncimage="python3 /Users/kanishkpachauri/Documents/kanishkblog/scripts/images.py"
 
 # File operations
-alias ls="eza --color=always --long --git --no-filesize --icons=always --no-time --no-user"
-alias cat='bat --paging never --decorations never --plain'
+alias ls="eza --color=always --long --git --no-filesize --icons=always --no-time"
+alias cat='bat --paging never --decorations never' 
 
 # Utilities
 alias afk='pmset displaysleepnow'

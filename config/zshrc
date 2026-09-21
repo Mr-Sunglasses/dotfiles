@@ -1,9 +1,21 @@
 # ~/.zshrc - Main configuration file
 
-# Source all zsh configuration files in order
+# Source greeting and basic init before instant prompt to avoid warnings
 source ~/.config/zsh/init.zsh
+
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# gpg related exports
+export GPG_TTY=$(tty)
+gpgconf --launch gpg-agent # commenting this out as it can be slow and often unnecessary to launch every time
+
+# Source all zsh configuration files in order
 source ~/.config/zsh/exports.zsh
 source ~/.config/zsh/plugins.zsh
+
 source ~/.config/zsh/aliases.zsh
 source ~/.config/zsh/functions.zsh
 source ~/.config/zsh/completions.zsh
@@ -13,3 +25,46 @@ source ~/.config/zsh/integrations.zsh
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# bun completions
+[ -s "/Users/kanishkpachauri/.bun/_bun" ] && source "/Users/kanishkpachauri/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# The following lines have been added by Docker Desktop to enable Docker CLI completions.
+fpath=(/Users/kanishkpachauri/.docker/completions $fpath)
+# Faster compinit
+autoload -Uz compinit
+if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.m-1) ]]; then
+  compinit -C
+else
+  compinit
+fi
+zinit cdreplay -q
+# End of Docker CLI completions
+
+
+export PATH="$HOME/.local/bin:$PATH"
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/kanishkpachauri/.lmstudio/bin"
+# End of LM Studio CLI section
+
+# opencode
+export PATH=/Users/kanishkpachauri/.opencode/bin:$PATH
+source /Users/kanishkpachauri/.neomanager/neomanager.zsh
+
+export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+
+
+
+# Added by Antigravity CLI installer
+export PATH="/Users/kanishkpachauri/.local/bin:$PATH"
+
+# >>> grok installer >>>
+export PATH="$HOME/.grok/bin:$PATH"
+fpath=(~/.grok/completions/zsh $fpath)
+autoload -Uz compinit && compinit -C
+# <<< grok installer <<<

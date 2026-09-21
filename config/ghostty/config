@@ -1,18 +1,19 @@
 title = "anton"
 font-family = "FiraCode Nerd Font Mono Reg"
-# theme = Homebrew 
-theme = pustota 
+theme = Kanagawa Wave 
+# theme = Coffee Theme 
+# theme = Kanagawa Lotus 
 font-size = 22
-background-opacity = 0.85
-background-blur-radius = 20
+# background-opacity = 0.85
+# background-blur-radius = 20
 mouse-hide-while-typing = true
 window-height = 30
 window-width = 128
 window-decoration = true
 window-padding-x = 10
 
-background = #1e1e1e
-foreground = #d4d4d4
+# background = #1e1e1e
+# foreground = #d4d4d4
 
 # background = #000000
 # foreground = #00FF00
