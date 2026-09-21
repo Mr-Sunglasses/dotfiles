@@ -1,0 +1,68 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  // "disable_ai": true,
+  "show_edit_predictions": false,
+  "edit_predictions": {
+    "provider": "zed",
+    "mode": "eager"
+  },
+  "cli_default_open_behavior": "new_window",
+  "vim": {
+    "use_smartcase_find": false,
+    "toggle_relative_line_numbers": true,
+  },
+  // "project_panel": {
+  //   "dock": "right",
+  // },
+  // "outline_panel": {
+  //   "dock": "right",
+  // },
+  // "collaboration_panel": {
+  //   "dock": "right",
+  // },
+  // "git_panel": {
+  //   "dock": "right",
+  // },
+  "languages": {
+    "Rust": {
+      "show_edit_predictions": false,
+    },
+  },
+  "icon_theme": {
+    "mode": "light",
+    "light": "Material Icon Theme",
+    "dark": "Material Icon Theme"
+  },
+  "agent": {
+    "dock": "left",
+    "default_profile": "write",
+    "default_model": {
+      "provider": "zed.dev",
+      "model": "gpt-5.5",
+      "enable_thinking": true,
+      "effort": "medium",
+    },
+    "favorite_models": [],
+    "model_parameters": [],
+  },
+  "session": {
+    "trust_all_worktrees": true,
+  },
+  "vim_mode": true,
+  "base_keymap": "VSCode",
+  "ui_font_size": 16,
+  "buffer_font_size": 15,
+  "theme": {
+    "mode": "dark",
+    "light": "Gruvbox Light Soft",
+    "dark": "Pustota",
+  },
+  "remove_trailing_whitespace_on_save": false,
+}

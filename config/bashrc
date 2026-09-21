@@ -1,3 +1,4 @@
-#!/usr/bin/env bash
+[[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
+eval "$(atuin init bash)"
 
-# This file must be empty
+export PATH="$HOME/.local/bin:$PATH:$HOME/.lmstudio/bin"

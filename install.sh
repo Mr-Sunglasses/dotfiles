@@ -77,6 +77,17 @@ echo "Copying ghostty configuration file to ~/.config/ghostty/..."
 cp ./config/ghostty/* ~/.config/ghostty/
 echo "Ghostty configuration file copied."
 
+# copy bashrc
+cp ./config/bashrc ~/.bashrc
+
+# copy remaining app configs into ~/.config
+echo "Copying app configuration files to ~/.config/..."
+for app in atuin btop gh git gram htop karabiner kitty zed; do
+    mkdir -p ~/.config/$app
+    cp -R ./config/$app/. ~/.config/$app/
+done
+echo "App configuration files copied."
+
 # Configure neovim
 echo "Configuring Neovim..."
 mkdir -p ~/.config/nvim
