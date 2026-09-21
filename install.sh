@@ -4,6 +4,8 @@
 #
 #   ./install.sh                 install everything (tools + configs)
 #   ./install.sh --configs-only  only copy config files (no installs)
+#   ./install.sh --prune         also uninstall Homebrew packages that aren't in the Brewfile
+#                                (asks first; combine with --configs-only to only prune)
 #
 # Existing files that would be overwritten are backed up to
 # ~/.dotfiles-backup/<timestamp>/ first.
@@ -12,7 +14,18 @@ DOTFILES="${0:A:h}"
 cd "$DOTFILES" || exit 1
 
 CONFIGS_ONLY=false
-[[ "$1" == "--configs-only" ]] && CONFIGS_ONLY=true
+PRUNE=false
+for arg in "$@"; do
+    case "$arg" in
+        --configs-only) CONFIGS_ONLY=true ;;
+        --prune)        PRUNE=true ;;
+        *)              echo "Unknown option: $arg"; exit 1 ;;
+    esac
+done
+
+# Casks installed from their own sites on the main Mac, so `brew bundle dump`
+# doesn't list them: cask name -> app name
+typeset -A EXTRA_CASKS=(kitty kitty zed Zed karabiner-elements Karabiner-Elements tinycast Tinycast)
 
 BACKUP_DIR="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
 FAILED=()
@@ -47,9 +60,7 @@ install_tools() {
     echo "Installing packages from Brewfile..."
     brew bundle --file=./Brewfile || FAILED+=("brew bundle (re-run: brew bundle --file=$DOTFILES/Brewfile)")
 
-    # Apps installed from their own sites on the current machine, not tracked by `brew bundle dump`
-    local -A apps=(kitty kitty zed Zed karabiner-elements Karabiner-Elements tinycast Tinycast)
-    for cask app in ${(kv)apps}; do
+    for cask app in ${(kv)EXTRA_CASKS}; do
         if [ -d "/Applications/$app.app" ]; then
             echo "$app is already installed."
         else
@@ -127,7 +138,34 @@ install_configs() {
     source ./require/fix_ssh_permissions.sh >/dev/null
 }
 
+# Uninstall everything Homebrew manages that the Brewfile no longer lists
+# (formulae, casks, taps, and VS Code/Cursor, cargo, go, uv extensions/tools).
+prune_packages() {
+    command -v brew >/dev/null 2>&1 || source ./require/install_brew.sh
+    echo "Checking for Homebrew packages that aren't in the Brewfile..."
+    # Keep the extra casks too, or we'd uninstall what install_tools just installed
+    local brewfile preview
+    brewfile=$(mktemp)
+    { cat ./Brewfile; for cask in ${(k)EXTRA_CASKS}; do echo "cask \"$cask\""; done } > "$brewfile"
+
+    preview=$(brew bundle cleanup --file="$brewfile" 2>/dev/null | grep -v '^Run `brew bundle cleanup --force`')
+    if ! echo "$preview" | grep -qE '^Would (uninstall|untap)'; then
+        echo "Nothing to remove, this Mac matches the Brewfile."
+        rm -f "$brewfile"
+        return
+    fi
+    echo "$preview"
+    read -r "reply?Remove all of the above? [y/N] "
+    if [[ "$reply" == [yY]* ]]; then
+        brew bundle cleanup --file="$brewfile" --force || FAILED+=("brew bundle cleanup")
+    else
+        echo "Skipped pruning."
+    fi
+    rm -f "$brewfile"
+}
+
 $CONFIGS_ONLY || install_tools
+$PRUNE && prune_packages
 install_configs   # last, so no installer can overwrite our configs
 
 # Pick up the new gpg-agent.conf (pinentry-mac)

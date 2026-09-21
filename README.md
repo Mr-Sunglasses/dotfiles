@@ -13,6 +13,20 @@ the Neovim config, and then copies every config in this repo into place. Any fil
 
 Use `./install.sh --configs-only` to only copy the config files.
 
+# Making another Mac match the dotfiles
+To also **remove** Homebrew packages that aren't in the `Brewfile` (e.g. apps you uninstalled on your main Mac
+and synced with `dotsync`):
+
+```sh
+git pull
+./install.sh --prune                 # install what's missing, update configs, remove what's not in the Brewfile
+./install.sh --configs-only --prune  # only update configs and remove extras, no installs
+```
+
+It lists everything it would remove (formulae, casks, taps, VS Code/Cursor extensions, cargo/go/uv tools) and
+asks before uninstalling anything. kitty, Zed, Karabiner-Elements and Tinycast are always kept.
+Apps you installed by dragging them into `/Applications` (not through Homebrew) aren't touched.
+
 # Syncing this Mac back to the repo
 Run `dotsync` (or `./sync.sh`) whenever you've changed a config or installed something with Homebrew. It:
 
