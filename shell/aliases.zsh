@@ -38,3 +38,6 @@ alias pubkey="cat ~/.ssh/id_rsa.pub | pbcopy | echo '=> Public key copied to pas
 alias shrug="echo '¯\_(ツ)_/¯' | pbcopy | echo '=> Copied to pasteboard.'"
 alias crontabguru="open -a 'Google Chrome' 'https://crontab.guru/'"
 alias upgbrew="brew update && brew upgrade"
+
+# dotfiles
+alias dotsync="${DOTFILES:-$HOME/Projects/dotfiles}/sync.sh"
